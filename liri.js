@@ -1,7 +1,9 @@
 const keys = require('./keys.js')
 const axios = require('axios');
 const moment = require('moment')
-const spotify = require('node-spotify-api')
+const Spotify = require('node-spotify-api')
+
+const spotify = new Spotify(keys.spotify)
 const fs = require('fs')
 
 var movie = "The Matrix"
@@ -10,15 +12,8 @@ var movieCorrected = movie.replace(" ", "+")
 var command = process.argv[2]
 
 
-// var input = ""
-// for (let i = 3; i < process.argv.length; i++) {
-//     input += process.argv[i] + " "
-// }
-// console.log(input)
-
-
-
 if (command === "movie-this") {
+    // For loop to get user input
     var input = ""
     for (let i = 3; i < process.argv.length; i++) {
         input += process.argv[i] + " "
@@ -33,13 +28,14 @@ if (command === "movie-this") {
             // handle error
             console.log(error);
         })
-} else if (command === "concert-this") {
+}
+else if (command === "concert-this") {
     var input = ""
     for (let i = 3; i < process.argv.length; i++) {
         input += process.argv[i]
     }
     console.log(input)
-    userInput = input.split
+    userInput = input
     axios.get("https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp")
         .then(function (response) {
             // handle success
@@ -53,4 +49,14 @@ if (command === "movie-this") {
             console.log("ERROR" + error + "ERROR");
         })
 }
-
+else if (command === "spotify-this-song") {
+    var input = ""
+    for (let i = 3; i < process.argv.length; i++) {
+        input += process.argv[i] + " "
+    }
+    spotify.search({ type: `track`, query: input, limit: 1 })
+        .then(function (response) {
+            console.log(response)
+        }
+        )
+}
