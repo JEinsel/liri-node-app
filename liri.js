@@ -1,3 +1,4 @@
+require('dotenv').config()
 const keys = require('./keys.js')
 const axios = require('axios');
 const moment = require('moment')
@@ -39,10 +40,10 @@ else if (command === "concert-this") {
     axios.get("https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp")
         .then(function (response) {
             // handle success
-            console.log(`Artist: ${response.data[0].lineup[0]}`);
-            console.log(`Venue: ${response.data[0].venue.name}`)
-            console.log(`Location of Venue: ${response.data[0].venue.city} ${response.data[0].venue.region} ${response.data[0].venue.country}`)
-            console.log(`Date: ${moment(response.data[0].datetime).format(`MM DD YYYY`)}`)
+            console.log(`Artist - ${response.data[0].lineup[0]}`);
+            console.log(`Venue - ${response.data[0].venue.name}`)
+            console.log(`Location of Venue - ${response.data[0].venue.city} ${response.data[0].venue.region} ${response.data[0].venue.country}`)
+            console.log(`Date - ${moment(response.data[0].datetime).format(`MM DD YYYY`)}`)
         })
         .catch(function (error) {
             // handle error
@@ -55,8 +56,11 @@ else if (command === "spotify-this-song") {
         input += process.argv[i] + " "
     }
     spotify.search({ type: `track`, query: input, limit: 1 })
-        .then(function (response) {
-            console.log(response)
+    .then(function (response) {
+        console.log(`Artist - ${response.tracks.items[0].artists[0].name}`);
+        console.log(`Song Title - ${response.tracks.items[0].name}`);
+        console.log(`Preview URL - ${response.tracks.items[0].preview_url}`)
+            console.log(`Album - ${response.tracks.items[0].album.name}`)
         }
         )
 }
