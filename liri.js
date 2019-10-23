@@ -3,13 +3,10 @@ const keys = require('./keys.js')
 const axios = require('axios');
 const moment = require('moment')
 const Spotify = require('node-spotify-api')
-
 const spotify = new Spotify(keys.spotify)
 const fs = require('fs')
 
-// Make a request for a user with a given ID
 var command = process.argv[2]
-// console.log(command)
 fs.appendFile("./log.txt",`\n${command} ${process.argv.slice(3).join(" ")}`,  (err, data) => {
     console.log(data)
 }) 
@@ -27,14 +24,12 @@ function spotifySearch(userInput) {
 function concertSearch(userInput) {
     axios.get("https://rest.bandsintown.com/artists/" + userInput + "/events?app_id=codingbootcamp")
         .then(function (response) {
-            // handle success
             console.log(`Artist - ${response.data[0].lineup[0]}`);
             console.log(`Venue - ${response.data[0].venue.name}`)
             console.log(`Location of Venue - ${response.data[0].venue.city} ${response.data[0].venue.region} ${response.data[0].venue.country}`)
             console.log(`Date - ${moment(response.data[0].datetime).format(`MM DD YYYY`)}`)
         })
         .catch(function (error) {
-            // handle error
             console.log("ERROR" + error + "ERROR");
         })
 }
@@ -42,7 +37,6 @@ function concertSearch(userInput) {
 function movieSearch(userInput) {
     axios.get(`http://www.omdbapi.com/?t=${userInput}&y=&plot=short&apikey=477e5877`)
         .then(function (response) {
-            // handle success
             console.log(response.data.Title);
             console.log(`imdb rating  ${response.data.imdbRating}`);
             console.log(response.data.Country);
@@ -66,17 +60,14 @@ function movieSearch(userInput) {
 }
 
 if (command === "movie-this") {
-    // For loop to get user input
     var input = ""
     for (let i = 3; i < process.argv.length; i++) {
         input += process.argv[i] + " "
     }
-    // console.log(input)
     if (input === "") {
         input = "Mr. Nobody"
         movieSearch(input)
     } else {
-        // console.log(input)
         movieSearch(input)
     }
 } else if (command === "concert-this") {
