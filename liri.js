@@ -5,11 +5,12 @@ const moment = require('moment')
 const Spotify = require('node-spotify-api')
 const spotify = new Spotify(keys.spotify)
 const fs = require('fs')
-
+let omdbID = keys.omdbID
+let bandsInTown = keys.BandsInTown
 var command = process.argv[2]
-fs.appendFile("./log.txt",`\n${command} ${process.argv.slice(3).join(" ")}`,  (err, data) => {
+fs.appendFile("./log.txt", `\n${command} ${process.argv.slice(3).join(" ")}`, (err, data) => {
     console.log(data)
-}) 
+})
 
 function spotifySearch(userInput) {
     spotify.search({ type: `track`, query: userInput, limit: 1 })
@@ -22,20 +23,19 @@ function spotifySearch(userInput) {
 }
 
 function concertSearch(userInput) {
-    axios.get("https://rest.bandsintown.com/artists/" + userInput + "/events?app_id=codingbootcamp")
-        .then(function (response) {
-            console.log(`Artist - ${response.data[0].lineup[0]}`);
-            console.log(`Venue - ${response.data[0].venue.name}`)
-            console.log(`Location of Venue - ${response.data[0].venue.city} ${response.data[0].venue.region} ${response.data[0].venue.country}`)
-            console.log(`Date - ${moment(response.data[0].datetime).format(`MM DD YYYY`)}`)
-        })
+    axios.get(`https://rest.bandsintown.com/artists/${userInput}/events?app_id=${bandsInTown}`).then(function (response) {
+        console.log(`Artist - ${response.data[0].lineup[0]}`);
+        console.log(`Venue - ${response.data[0].venue.name}`)
+        console.log(`Location of Venue - ${response.data[0].venue.city} ${response.data[0].venue.region} ${response.data[0].venue.country}`)
+        console.log(`Date - ${moment(response.data[0].datetime).format(`MM DD YYYY`)}`)
+    })
         .catch(function (error) {
             console.log("ERROR" + error + "ERROR");
         })
 }
 
 function movieSearch(userInput) {
-    axios.get(`http://www.omdbapi.com/?t=${userInput}&y=&plot=short&apikey=477e5877`)
+    axios.get(`http://www.omdbapi.com/?t=${userInput}&y=&plot=short&apikey=${omdbID.key}`)
         .then(function (response) {
             console.log(response.data.Title);
             console.log(`imdb rating  ${response.data.imdbRating}`);
